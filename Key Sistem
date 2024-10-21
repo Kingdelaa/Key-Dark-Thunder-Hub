@@ -1,0 +1,110 @@
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local ExecuteButton = Instance.new("TextButton")
+local KeyBox = Instance.new("TextBox")
+local Title = Instance.new("TextLabel")
+local UIGradient = Instance.new("UIGradient")
+local StatusLabel = Instance.new("TextLabel")
+local correctKey = "King" -- A Key agora é "King"
+
+-- Propriedades da ScreenGui
+ScreenGui.Name = "TabDarkThunder"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Propriedades da MainFrame (Contêiner Principal)
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.Position = UDim2.new(0.5, -225, 0.5, -100) -- Centralizado na tela
+MainFrame.Size = UDim2.new(0, 450, 0, 200)
+
+UICorner.CornerRadius = UDim.new(0, 15) -- Cantos arredondados
+UICorner.Parent = MainFrame
+
+-- Gradiente Futurista
+UIGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 85, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 255))
+}
+UIGradient.Rotation = 45
+UIGradient.Parent = MainFrame
+
+-- Propriedades da Title (Título do Painel)
+Title.Parent = MainFrame
+Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(0, 450, 0, 30)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Tab Dark Thunder"
+Title.TextColor3 = Color3.fromRGB(0, 85, 255)
+Title.TextScaled = true
+Title.TextStrokeTransparency = 0.8
+
+-- Propriedades da KeyBox (Área para inserir a Key)
+KeyBox.Parent = MainFrame
+KeyBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+KeyBox.Position = UDim2.new(0.05, 0, 0.35, 0)
+KeyBox.Size = UDim2.new(0, 300, 0, 50)
+KeyBox.Font = Enum.Font.GothamBold
+KeyBox.PlaceholderText = "Enter your Key..."
+KeyBox.Text = ""
+KeyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyBox.TextSize = 14 -- Texto menor
+
+-- Propriedades do ExecuteButton (Botão de Verificar Key)
+ExecuteButton.Parent = MainFrame
+ExecuteButton.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+ExecuteButton.Position = UDim2.new(0.7, 0, 0.35, 0)
+ExecuteButton.Size = UDim2.new(0, 100, 0, 50)
+ExecuteButton.Font = Enum.Font.GothamBold
+ExecuteButton.Text = "Verify"
+ExecuteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExecuteButton.TextSize = 16 -- Texto um pouco menor
+
+-- Status de verificação
+StatusLabel.Parent = MainFrame
+StatusLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Position = UDim2.new(0.05, 0, 0.7, 0)
+StatusLabel.Size = UDim2.new(0, 400, 0, 30)
+StatusLabel.Font = Enum.Font.GothamBold
+StatusLabel.Text = ""
+StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+StatusLabel.TextSize = 14 -- Texto menor
+StatusLabel.TextScaled = false -- Para ajustar o tamanho fixo
+
+-- Função para verificar Key
+local function verifyKey()
+    local inputKey = KeyBox.Text
+
+    if inputKey == correctKey then
+        -- Key correta, exibe mensagem
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+        StatusLabel.Text = "Key Correct! Executing script..."
+        wait(1)
+
+        -- Tenta executar o script e verifica erros
+        local successScript, errorMessage = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Kingdelaa/Dark-Thunder/refs/heads/main/By%3AKing%20Dark%20Thunder%20Hub"))()
+        end)
+
+        if successScript then
+            -- Se o script for executado com sucesso, destruir a UI
+            ScreenGui:Destroy()
+        else
+            -- Em caso de erro na execução do script
+            StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+            StatusLabel.Text = "Failed to execute script: " .. errorMessage
+            print("Erro ao executar o script: " .. errorMessage) -- Depuração
+        end
+    else
+        -- Key incorreta
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+        StatusLabel.Text = "Invalid Key! Please try again."
+        print("Key inserida incorreta: " .. inputKey) -- Depuração
+    end
+end
+
+-- Conectar o botão ao verificador de Key
+ExecuteButton.MouseButton1Click:Connect(verifyKey)
